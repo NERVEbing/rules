@@ -1,34 +1,87 @@
 # rules
 
-维护 GL.iNet 和 Mihomo 的域名/IP 分流订阅。
+合并上游 Mihomo YAML 规则集与手工规则，发布 GL.iNet 和 Mihomo 的 `proxy` / `direct` 域名、IP 订阅。
+
+## 订阅地址
+
+订阅文件位于 `release` 分支。
+
+| 文件                          | 格式                               | GitHub                                                                                                   | jsDelivr                                                                                | jsDelivr-CF                                                                                   | gh-proxy.org                                                                                                                  |
+| ----------------------------- | ---------------------------------- | -------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `glinet/proxy.txt`            | 域名、IPv4 文本                    | [下载](https://raw.githubusercontent.com/NERVEbing/rules/refs/heads/release/glinet/proxy.txt)            | [下载](https://cdn.jsdelivr.net/gh/NERVEbing/rules@release/glinet/proxy.txt)            | [下载](https://testingcf.jsdelivr.net/gh/NERVEbing/rules@release/glinet/proxy.txt)            | [下载](https://gh-proxy.org/https://raw.githubusercontent.com/NERVEbing/rules/refs/heads/release/glinet/proxy.txt)            |
+| `glinet/direct.txt`           | 域名、IPv4 文本                    | [下载](https://raw.githubusercontent.com/NERVEbing/rules/refs/heads/release/glinet/direct.txt)           | [下载](https://cdn.jsdelivr.net/gh/NERVEbing/rules@release/glinet/direct.txt)           | [下载](https://testingcf.jsdelivr.net/gh/NERVEbing/rules@release/glinet/direct.txt)           | [下载](https://gh-proxy.org/https://raw.githubusercontent.com/NERVEbing/rules/refs/heads/release/glinet/direct.txt)           |
+| `rule-set/domain/proxy.yaml`  | YAML，`behavior: domain`           | [下载](https://raw.githubusercontent.com/NERVEbing/rules/refs/heads/release/rule-set/domain/proxy.yaml)  | [下载](https://cdn.jsdelivr.net/gh/NERVEbing/rules@release/rule-set/domain/proxy.yaml)  | [下载](https://testingcf.jsdelivr.net/gh/NERVEbing/rules@release/rule-set/domain/proxy.yaml)  | [下载](https://gh-proxy.org/https://raw.githubusercontent.com/NERVEbing/rules/refs/heads/release/rule-set/domain/proxy.yaml)  |
+| `rule-set/domain/direct.yaml` | YAML，`behavior: domain`           | [下载](https://raw.githubusercontent.com/NERVEbing/rules/refs/heads/release/rule-set/domain/direct.yaml) | [下载](https://cdn.jsdelivr.net/gh/NERVEbing/rules@release/rule-set/domain/direct.yaml) | [下载](https://testingcf.jsdelivr.net/gh/NERVEbing/rules@release/rule-set/domain/direct.yaml) | [下载](https://gh-proxy.org/https://raw.githubusercontent.com/NERVEbing/rules/refs/heads/release/rule-set/domain/direct.yaml) |
+| `rule-set/ipcidr/proxy.yaml`  | IPv4/IPv6 YAML，`behavior: ipcidr` | [下载](https://raw.githubusercontent.com/NERVEbing/rules/refs/heads/release/rule-set/ipcidr/proxy.yaml)  | [下载](https://cdn.jsdelivr.net/gh/NERVEbing/rules@release/rule-set/ipcidr/proxy.yaml)  | [下载](https://testingcf.jsdelivr.net/gh/NERVEbing/rules@release/rule-set/ipcidr/proxy.yaml)  | [下载](https://gh-proxy.org/https://raw.githubusercontent.com/NERVEbing/rules/refs/heads/release/rule-set/ipcidr/proxy.yaml)  |
+| `rule-set/ipcidr/direct.yaml` | IPv4/IPv6 YAML，`behavior: ipcidr` | [下载](https://raw.githubusercontent.com/NERVEbing/rules/refs/heads/release/rule-set/ipcidr/direct.yaml) | [下载](https://cdn.jsdelivr.net/gh/NERVEbing/rules@release/rule-set/ipcidr/direct.yaml) | [下载](https://testingcf.jsdelivr.net/gh/NERVEbing/rules@release/rule-set/ipcidr/direct.yaml) | [下载](https://gh-proxy.org/https://raw.githubusercontent.com/NERVEbing/rules/refs/heads/release/rule-set/ipcidr/direct.yaml) |
+
+GL.iNet 导入步骤见[官方文档](https://docs.gl-inet.com/router/en/4/tutorials/how_to_configure_domain_and_ip_filtering_rules_for_glinet_routers_via_an_online_text_file/)。Mihomo 的 `rule-providers` 使用 `type: http`、`format: yaml`，`behavior` 按表选择。
+
+两种客户端都需先匹配 `direct` 的域名和 IP 规则，再匹配 `proxy`，让直连排除项优先于父域名和大网段规则。生成器分别合并两个策略的规则。
+
+来源、规则条数和 SHA256 见 [build-info.json](https://raw.githubusercontent.com/NERVEbing/rules/refs/heads/release/build-info.json)。
+
+## GL.iNet 限制
+
+GL.iNet 文本导出时移除 `+.` 前缀，例如 `+.example.com` 转为 `example.com`。IPv6 仅保留在 Mihomo 规则集中。
+
+GL-MT3600BE（固件 4.9.0）导入时会过滤 `cn`、`alibaba` 等单标签顶级域条目。这些条目仍保留在生成文件中，因此文件行数会多于路由器识别的条数。`+.cn` 导出为 `cn` 后，在该固件中无法覆盖整个 `.cn`；Mihomo 保留原规则。
+
+## 维护规则
+
+[sources.yaml](sources.yaml) 默认使用 [MetaCubeX/meta-rules-dat](https://github.com/MetaCubeX/meta-rules-dat) 的规则集：
+
+| 策略     | 上游规则集                                                                |
+| -------- | ------------------------------------------------------------------------- |
+| `proxy`  | `geosite/gfw.yaml`、`geosite/category-ai-!cn.yaml`、`geoip/telegram.yaml` |
+| `direct` | `geosite/cn.yaml`                                                         |
+
+在 `sources` 列表中添加或修改来源。每个条目需有唯一的 `name`，`policy` 为 `proxy` 或 `direct`，`behavior` 为 `domain` 或 `ipcidr`；`url` 与 `path` 二选一，`path` 相对配置文件所在目录。
+
+手工规则也在 `sources.yaml` 中配置：
+
+| 内容           | proxy                                  | direct                                   |
+| -------------- | -------------------------------------- | ---------------------------------------- |
+| 域名           | [proxy.yaml](custom/domain/proxy.yaml) | [direct.yaml](custom/domain/direct.yaml) |
+| IPv4/IPv6 CIDR | [proxy.yaml](custom/ipcidr/proxy.yaml) | [direct.yaml](custom/ipcidr/direct.yaml) |
+
+规则文件使用 `payload` 列表。域名示例：
+
+```yaml
+payload:
+  - +.example.com
+  - exact.example.net
+```
+
+在 Mihomo 中，`+.example.com` 匹配域名及其子域名，`exact.example.net` 精确匹配。IP 规则的 `payload` 填写 CIDR，如 `203.0.113.0/24`、`2001:db8::/32`；单地址使用 `/32` 或 `/128`。
+
+输入支持 `domain`、`ipcidr` 的 YAML 规则集，不支持 `classical`、MRS 和复杂通配符。下载失败、远程空列表或无效规则会中止构建，保留上次产物。
+
+## 生成与发布
+
+项目使用 uv 管理 Python 3.12 和依赖。
 
 ```sh
 uv sync --locked
-uv run --locked python scripts/generate.py
-```
-
-产物在 `dist/`，来源、哈希和条数见 `dist/build-info.json`。
-
-- `sources.yaml`：配置 Mihomo YAML 数据源，使用 `url` 或相对此文件的 `path`。
-- `policy`：`proxy` 或 `direct`；`behavior`：`domain` 或 `ipcidr`。
-- `custom/domain/{proxy,direct}.yaml`：手工域名规则，`+.example.com` 表示后缀，`example.com` 表示精确域名。
-- `custom/ipcidr/{proxy,direct}.yaml`：手工 IPv4/IPv6 CIDR，单地址使用 `/32` 或 `/128`。
-
-输入采用 `payload` 列表；复杂通配符、classical 规则和 MRS 不在当前输入范围内。远程空列表、下载失败或无效规则会阻止发布。更换配置或输出目录：
-
-```sh
 uv run --locked python scripts/generate.py --config sources.yaml --output dist
 ```
 
-检查与更新依赖：
+`--config`、`--output` 可省略，默认分别为项目目录下的 `sources.yaml`、`dist/`。本地产物与 `release` 分支使用相同的文件结构。
+
+`main` 保存脚本、配置和 `custom/` 手工规则；`release` 保存生成的 `rule-set/`、`glinet/` 和 `build-info.json`。
+
+[workflow](.github/workflows/build.yml) 按每天 10:17（UTC+8）的计划构建，也在 `main` 的构建相关文件变更或手动触发时运行。检查通过后更新 `release`，无内容变化不提交；首次发布会创建分支。Pull Request 仅检查，不发布。
+
+## 检查与依赖更新
 
 ```sh
 uv run --locked ruff check .
 uv run --locked ruff format --check .
 uv run --locked python -m unittest discover -s tests -v
-uv lock --upgrade
 ```
 
-`main` 保存脚本、配置和 `custom/` 手工规则；`release` 的 `rule-set/` 发布 Mihomo 合并规则，`glinet/` 发布 `proxy.txt` 和 `direct.txt`。workflow 在每日定时、`main` 变更或手动触发时构建，通过检查后更新 `release`，无内容变化不提交。Pull Request 仅检查，不发布。首次成功发布会创建 `release` 分支。
+更新锁定依赖：`uv lock --upgrade`。
 
-生成器和手工规则使用 [MIT](LICENSE)。聚合规则的来源记录在 `dist/build-info.json`；上游数据许可参见 [MetaCubeX/meta-rules-dat](https://github.com/MetaCubeX/meta-rules-dat/blob/master/LICENSE)、[gfwlist](https://github.com/gfwlist/gfwlist/blob/master/COPYING.txt)和 [Loyalsoldier/geoip](https://github.com/Loyalsoldier/geoip/blob/master/LICENSE)。
+## License
+
+[MIT](LICENSE)

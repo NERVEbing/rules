@@ -45,7 +45,7 @@ def domain_rule(value: str) -> str:
     labels = host.split(".")
     if (
         len(host) > 253
-        or len(labels) < 2
+        or (len(labels) < 2 and not suffix)
         or labels[-1].isdigit()
         or any(not HOST_LABEL.fullmatch(label) for label in labels)
     ):

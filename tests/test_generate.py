@@ -115,6 +115,21 @@ class GenerateTests(unittest.TestCase):
         generate(self.config_path, self.output)
         self.assertEqual(self.payload("rule-set/ipcidr/direct.yaml"), [])
 
+    def test_dual_exports_preserve_top_level_suffixes(self):
+        self.write_payload(
+            "custom/domain/direct.yaml",
+            ["+.CN.", "+.alibaba", "+.中国", "+.internal.example.com"],
+        )
+        generate(self.config_path, self.output)
+        self.assertEqual(
+            self.payload("rule-set/domain/direct.yaml"),
+            ["+.alibaba", "+.cn", "+.internal.example.com", "+.xn--fiqs8s"],
+        )
+        self.assertEqual(
+            (self.output / "glinet/direct.txt").read_text(),
+            "alibaba\ncn\ninternal.example.com\nxn--fiqs8s\n203.0.113.64/26\n",
+        )
+
     def test_repeated_build_is_deterministic(self):
         generate(self.config_path, self.output)
         before = self.snapshot()

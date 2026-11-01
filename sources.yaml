@@ -1,0 +1,29 @@
+sources:
+  - name: gfw
+    policy: proxy
+    behavior: domain
+    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/gfw.yaml
+  - name: ai-not-cn
+    policy: proxy
+    behavior: domain
+    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/category-ai-!cn.yaml
+  - name: telegram
+    policy: proxy
+    behavior: ipcidr
+    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geoip/telegram.yaml
+  - name: custom-proxy-domains
+    policy: proxy
+    behavior: domain
+    path: custom/domain/proxy.yaml
+  - name: custom-proxy-ips
+    policy: proxy
+    behavior: ipcidr
+    path: custom/ipcidr/proxy.yaml
+  - name: custom-direct-domains
+    policy: direct
+    behavior: domain
+    path: custom/domain/direct.yaml
+  - name: custom-direct-ips
+    policy: direct
+    behavior: ipcidr
+    path: custom/ipcidr/direct.yaml

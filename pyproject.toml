@@ -1,0 +1,24 @@
+[project]
+name = "rules"
+version = "0.1.0"
+description = "Generate GL.iNet and Mihomo subscriptions from maintained rule sets"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+dependencies = [
+    "pyyaml>=6.0.3",
+]
+
+[dependency-groups]
+dev = ["ruff>=0.17.3"]
+
+[[tool.uv.index]]
+name = "pypi"
+url = "https://pypi.org/simple"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

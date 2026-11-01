@@ -12,7 +12,6 @@ on:
       - scripts/**
       - tests/**
       - custom/**
-      - LICENSE
   pull_request:
     paths:
       - .github/workflows/build.yml
@@ -23,7 +22,6 @@ on:
       - scripts/**
       - tests/**
       - custom/**
-      - LICENSE
   schedule:
     - cron: "17 2 * * *"
   workflow_dispatch:

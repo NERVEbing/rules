@@ -246,7 +246,6 @@ def generate(config_path: Path, output: Path) -> dict:
         files[f"glinet/{policy}.txt"] = ("\n".join(targets) + "\n").encode("utf-8")
         counts[policy] = {"domains": len(domains), "ipv4": len(ipv4), "ipv6": len(ipv6)}
 
-    files["LICENSE"] = (ROOT / "LICENSE").read_bytes()
     report = {
         "generator": "rules",
         "configuration_sha256": hashlib.sha256(config_data).hexdigest(),

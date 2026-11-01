@@ -75,8 +75,6 @@ uv run --locked python scripts/generate.py --config sources.yaml --output dist
 
 `main` 保存脚本、配置和 `custom/` 手工规则；`release` 保存生成的 `rule-set/`、`glinet/` 和 `build-info.json`。
 
-[workflow](.github/workflows/build.yml) 按每天 10:17（UTC+8）的计划构建，也在 `main` 的构建相关文件变更或手动触发时运行。检查通过后更新 `release`，无内容变化不提交；首次发布会创建分支。Pull Request 仅检查，不发布。
-
 ## 检查与依赖更新
 
 ```sh

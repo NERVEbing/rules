@@ -7,8 +7,9 @@ payload:
   - +.apple.com
   - +.icloud.com
 
+  - +.get.geojs.io
+  - +.icanhazip.com
+
   - +.v2.argotunnel.com
   - +.hf-mirror.com
   - +.xethub.hf.co
-  - +.get.geojs.io
-  - +.icanhazip.com

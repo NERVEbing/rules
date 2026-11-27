@@ -1,5 +1,7 @@
 payload:
   - +.ththsub.com
 
+  - +.dash.cloudflare.com
+
   - +.debian.map.fastlydns.net
   - +.download.proxmox.com

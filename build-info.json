@@ -1,0 +1,98 @@
+{
+  "configuration_sha256": "881f8a8971e8be8206248a641e95151ec64e9da596d6affd7b23b88f2ece4254",
+  "counts": {
+    "direct": {
+      "domains": 110188,
+      "ipv4": 4,
+      "ipv6": 0
+    },
+    "proxy": {
+      "domains": 4652,
+      "ipv4": 12,
+      "ipv6": 4
+    }
+  },
+  "generator": "rules",
+  "output_sha256": {
+    "glinet/direct.txt": "2aabc24ed8c4c1234c81f3925d20975748fa58224446f3ab6da378526a60056b",
+    "glinet/proxy.txt": "56ffd23386cb41d5b159a7ead72b3caf794856bdd3419c8e21dc94e6f8f741c2",
+    "rule-set/domain/direct.yaml": "714953a0d3c4e1e00c03e82a588f1e0af33a4abfd81d1cfe583681978971c4ee",
+    "rule-set/domain/proxy.yaml": "fa9088d8585c0e1c992d260ef0fa16beb0d85daaa69ba8fd44e1738e74e63bc6",
+    "rule-set/ipcidr/direct.yaml": "15152fde7e33c0a1ac0be2e9c91e33c5725f14e81e0a611f3034346a5d3b7f23",
+    "rule-set/ipcidr/proxy.yaml": "aa34ba55dfd78c0c255f20a964ef62fee13814473c58daefdf7505fc62ecad36"
+  },
+  "sources": [
+    {
+      "behavior": "domain",
+      "input_count": 4465,
+      "name": "gfw",
+      "normalized_count": 4465,
+      "policy": "proxy",
+      "sha256": "a3a03bde90f7b8ca1f1bc19c7dacf375ea1102b75d6625426e94b46107a6ff65",
+      "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/gfw.yaml"
+    },
+    {
+      "behavior": "domain",
+      "input_count": 219,
+      "name": "ai-not-cn",
+      "normalized_count": 219,
+      "policy": "proxy",
+      "sha256": "147a9bfe16d363db6592ca543d61d409343b8039bd32fb1fdcbaae67e79efdce",
+      "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/category-ai-!cn.yaml"
+    },
+    {
+      "behavior": "ipcidr",
+      "input_count": 12,
+      "name": "telegram",
+      "normalized_count": 12,
+      "policy": "proxy",
+      "sha256": "12a1e7bd189fc23db25e9ac45f3bb8e9a5978048541a0358a46ef72b110812ae",
+      "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geoip/telegram.yaml"
+    },
+    {
+      "behavior": "domain",
+      "input_count": 110177,
+      "name": "cn",
+      "normalized_count": 110177,
+      "policy": "direct",
+      "sha256": "f03c301bc6ef21349da52b377e164aa1518f5549188575bc08b4e4436651b620",
+      "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/cn.yaml"
+    },
+    {
+      "behavior": "domain",
+      "input_count": 4,
+      "name": "custom-proxy-domains",
+      "normalized_count": 4,
+      "path": "custom/domain/proxy.yaml",
+      "policy": "proxy",
+      "sha256": "71b509c773293e0a08df634847828fb21e631521a2fa567917ff955b3ca308c6"
+    },
+    {
+      "behavior": "ipcidr",
+      "input_count": 4,
+      "name": "custom-proxy-ips",
+      "normalized_count": 4,
+      "path": "custom/ipcidr/proxy.yaml",
+      "policy": "proxy",
+      "sha256": "1962aefe549ab6b599e12daca93fa7e8f0d2cb59aac334683be6a2d18884d379"
+    },
+    {
+      "behavior": "domain",
+      "input_count": 11,
+      "name": "custom-direct-domains",
+      "normalized_count": 11,
+      "path": "custom/domain/direct.yaml",
+      "policy": "direct",
+      "sha256": "4f50e2c94e9b959888275a318e4852303c26562a1d71a346480074fdbd2eb3e0"
+    },
+    {
+      "behavior": "ipcidr",
+      "input_count": 4,
+      "name": "custom-direct-ips",
+      "normalized_count": 4,
+      "path": "custom/ipcidr/direct.yaml",
+      "policy": "direct",
+      "sha256": "db8b3f4111efc3363a61c43644bcfe333e2492a4d575968770703a29445a9237"
+    }
+  ]
+}
